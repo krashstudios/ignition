@@ -64,16 +64,21 @@
       {
         "dropins": [
           {
-            "contents": "[Service]\n# Override Execstart in main unit\nExecStart=\n# Add new Execstart with `-` prefix to ignore failure\nExecStart=-/usr/sbin/agetty --autologin admin --noclear %I $TERM\nTTYVTDisallocate=no\n",
+            "contents": "\n[Service]\n# Override Execstart in main unit\nExecStart=\n# Add new Execstart with `-` prefix to ignore failure\nExecStart=-/usr/sbin/agetty --autologin admin --noclear %I $TERM\nTTYVTDisallocate=no\n",
             "name": "autologin-core.conf"
           }
         ],
         "name": "serial-getty@ttyS0.service"
       },
       {
-        "contents": "[Unit]\nDescription=Portainer Admin Container\nAfter=docker.service\nRequires=docker.service network.target network-online.target\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nTimeoutStartSec=0\nExecStartPre=-/usr/bin/docker stop %n\nExecStartPre=-/usr/bin/docker rm %n\nExecStartPre=/usr/bin/docker pull portainer/portainer-ce\nExecStart=-/usr/bin/mkdir -p /mnt/shared_nfs/portainer_data\n# Privileged mode is required for binding to local socket to work due to SELINUX (https://github.com/portainer/portainer/issues/849)\nExecStart=/usr/bin/docker run --privileged=true -d -p 9443:9443 --name %n --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /var/portainer_data:/data portainer/portainer-ce\nExecStop=/usr/bin/docker stop -t 15 %n\n\n[Install]\nWantedBy=multi-user.target\n",
+        "contents": "[Unit]\nDescription=Portainer Admin Container\nAfter=docker.service\nRequires=docker.service network.target network-online.target\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nTimeoutStartSec=0\nExecStartPre=-/usr/bin/docker stop %n\nExecStartPre=-/usr/bin/docker rm %n\nExecStartPre=/usr/bin/docker pull portainer/portainer-ce\nExecStart=-/usr/bin/mkdir -p /mnt/shared_nfs/portainer_data\n# Privileged mode is required for binding to local socket to work due to SELINUX (https://github.com/portainer/portainer/issues/849)\nExecStart=/usr/bin/docker run --privileged=true -d -p 9443:9443 --name %n --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /var/portainer_data:/data portainer/portainer-ce\nExecStop=/usr/bin/docker stop -t 15 %n\n\n[Install]\nWantedBy=multi-user.target",
         "enabled": true,
         "name": "docker.portainer.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Install docker-compose\nAfter=docker.service\nConditionPathExists=!/opt/bin/docker-compose\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/mkdir -p /opt/bin/\nExecStart=/bin/wget -q -nc -O /opt/bin/docker-compose \"https://github.com/docker/compose/releases/download/v2.3.2/docker-compose-linux-x86_64\"\nExecStart=/usr/bin/chmod +x /opt/bin/docker-compose\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "docker.compose.service"
       }
     ]
   }
