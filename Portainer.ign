@@ -23,6 +23,12 @@
         "device": "/dev/sda",
         "partitions": [
           {
+            "label": "EFI-SYSTEM",
+            "number": 2,
+            "resize": true,
+            "sizeMiB": 600
+          },
+          {
             "label": "root",
             "number": 4,
             "resize": true,
@@ -63,7 +69,13 @@
     ],
     "filesystems": [
       {
-        "device": "/dev/mapper/root",
+        "device": "/dev/disk/by-partlabel/EFI-SYSTEM",
+        "format": "vfat",
+        "label": "EFI-SYSTEM",
+        "wipeFilesystem": true
+      },
+      {
+        "device": "/dev/disk/by-partlabel/root",
         "format": "xfs",
         "label": "root",
         "wipeFilesystem": true
