@@ -23,6 +23,12 @@
         "device": "/dev/sda",
         "partitions": [
           {
+            "label": "EFI-SYSTEM",
+            "number": 2,
+            "resize": true,
+            "sizeMiB": 600
+          },
+          {
             "label": "root",
             "number": 4,
             "resize": true,
@@ -56,12 +62,18 @@
       {
         "path": "/etc/ssh/sshd_config.d/20-enable-passwords.conf",
         "contents": {
-          "source": "data:,%23%20Enable%20SSH%20password%20login%0APasswordAuthentication%20yes"
+          "source": "data:,%23%20Enable%20SSH%20password%20login%0APasswordAuthentication%20yes%0A"
         },
         "mode": 420
       }
     ],
     "filesystems": [
+      {
+        "device": "/dev/disk/by-partlabel/EFI-SYSTEM",
+        "format": "FAT32",
+        "label": "EFI-SYSTEM",
+        "wipeFilesystem": true
+      },
       {
         "device": "/dev/disk/by-partlabel/root",
         "format": "xfs",
