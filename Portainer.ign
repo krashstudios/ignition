@@ -7,7 +7,8 @@
       {
         "groups": [
           "sudo",
-          "docker"
+          "docker",
+          "wheel"
         ],
         "name": "core",
         "passwordHash": "$y$j9T$NURs6cZOlp./wBT.bGufE/$iUuurM1DvA0cWykav.Zeha2yztb5B8.vzlMXW1S1LY6",
